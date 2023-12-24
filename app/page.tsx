@@ -1,4 +1,38 @@
+"use client"
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useEffect } from "react";
+
+
+gsap.registerPlugin(ScrollTrigger);
+
 export default function Home() {
+  useEffect(()=>{
+    const textWrappers = document.querySelectorAll(".your-text-wrapper-class")
+
+    const pinTrigger = ScrollTrigger.create({
+      trigger:".content-wrapper",
+      pin: true,
+      start: "top top",
+      end: "+=200%",
+    });
+
+    let tl = gsap.timeline();
+    
+    tl.to(textWrappers,{
+      x:"-300%",
+      scrollTrigger:{
+        start:() => pinTrigger?.start,
+        end:() => pinTrigger?.end,
+        scrub:2,
+      }
+    })
+
+    return()=>{
+      pinTrigger?.kill();
+      tl.kill();
+    }
+  })
   return (
     <div className="content-wrapper">
     {/* Your component content */}
